@@ -161,9 +161,9 @@ def auto_check_views(objs_bounds, eye=1.6):
 
 
 def add_ref_person(pos, z=0.0):
-    from .actors import make_capsule_object
+    from .actors import make_figure
     coll = ensure_collection("参照人")
-    ob = make_capsule_object("参照人_1.75米", 1.75, 0.22, color_linear("#f2f2f2"), coll)
+    ob, _ = make_figure("参照人_1.75米", 1.75, 0.22, color_linear("#f2f2f2"), coll)
     ob.location = (pos[0], pos[1], z)
     return ob
 

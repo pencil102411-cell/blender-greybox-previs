@@ -584,19 +584,25 @@ def write_handoff(data, path, version, video_name):
     L = [f"# Seedance 2.5 交接卡（{version}）\n",
          f"参考视频：`{video_name}`，{data['res'][0]}×{data['res'][1]}（21:9 时即 Seedance 原生宽银幕尺寸），{FPS} 帧/秒，"
          f"{data['duration']:.2f} 秒，{len(data.get('shots', []))} 个镜头，无声。\n",
-         "这条灰模视频只用来锁定：**人物站位与走位、人物在空间中的位置、镜头构图与运镜、切镜节奏**。"
+         "这条灰模视频只用来锁定：**人物站位与走位、人物朝向、人物在空间中的位置、镜头构图与运镜、切镜节奏**。"
          "人物形象、建筑造型、材质、光影、动作细节都以最终提示词和参考图为准。\n",
          "## 颜色对照\n"]
-    for aid, a in data.get("actors", {}).items():
-        L.append(f"- {a['color']} 色胶囊体 = **{a['name']}**（身高 {a['height']} 米）")
+    actors = list(data.get("actors", {}).values())
+    noun = lambda a: "身体的人偶" if a.get("figure", "head") == "head" else "胶囊体"
+    for a in actors:
+        L.append(f"- {color_word(a['color'])}色（{a['color']}）{noun(a)} = **{a['name']}**（身高 {a['height']} 米）")
+    has_head = any(a.get("figure", "head") == "head" for a in actors)
+    if has_head:
+        L.append("\n人偶头部**浅色的一面是脸，深色的一面是后脑**；身体左右宽、前后扁。看人偶就能分清人物面朝哪边。")
     L += ["", "## 镜头时间码\n", "| 镜头 | 时间 | 主体 | 景别 | 焦段 | 运镜 |", "|---|---|---|---|---|---|"]
     for s in data.get("shots", []):
         b = s["begin"]
         L.append(f"| {s['id']} | {s['start']:.2f}～{s['end']:.2f}s | {'、'.join(s['subjects']) or '-'} | "
                  f"{b.get('size', '-')} | {b['lens']:g}mm | {describe_move(s)} |")
-    names = "，".join(f"视频中的{color_word(a['color'])}色胶囊体是{a['name']}" for a in data.get("actors", {}).values())
+    names = "，".join(f"{color_word(a['color'])}色{noun(a)}是{a['name']}" for a in actors)
+    facing = "人偶头部浅色的一面是脸、深色的一面是后脑，人物面朝哪边以此为准；" if has_head else ""
     L += ["", "## 建议写进提示词的参考声明（按需修改）\n",
-          f"> 参考@视频1 的镜头运动、节奏、景别变化、人物走位和人物之间的站位关系；{names}；"
+          f"> 参考@视频1 的镜头运动、节奏、景别变化、人物走位、人物朝向和人物之间的站位关系；视频中{names}；{facing}"
           "不参考视频中的人物外形、建筑造型、材质、颜色和光影，这些以提示词和参考图为准。\n",
           "多条参考视频总长不能超过 30 秒；超过 30 秒的预演已经拆成多段，分段生成后再剪辑。"]
     with open(path, "w", encoding="utf-8") as f:
