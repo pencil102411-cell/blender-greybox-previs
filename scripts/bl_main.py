@@ -101,7 +101,7 @@ def main():
         for aid, ac in actors.items():
             dom = [max(w.items(), key=lambda kv: kv[1])[0] for w in ac.weights]
             data["actors"][aid] = dict(
-                name=ac.name, color=hexcolor(ac.color_spec), height=ac.H, radius=ac.r,
+                name=ac.name, color=hexcolor(ac.color_spec), height=ac.H, radius=ac.r, figure=ac.figure,
                 pos=[[round(x, 3), round(y, 3)] for x, y in ac.pos], z=[round(z, 3) for z in ac.base_z],
                 facing=[round(f % 360, 1) for f in ac.facing], pose=dom, moving=ac.moving,
                 keys=ac.keys, moves=[n[1] for n in ac.notes if n[0] == "move"])
