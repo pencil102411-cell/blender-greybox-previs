@@ -1,3 +1,6 @@
+> **本仓库已并入 [shanggu-film-pipeline-fqllg](https://github.com/pencil102411-cell/shanggu-film-pipeline-fqllg)（上古影视工作流-FQLLG），不再单独更新。**
+> 新的安装和更新方法见新仓库的 README。这里保留旧版本供查阅，已设为只读归档。
+
 # Blender 灰模预演（blender-greybox-previs）
 
 给 AI Agent（Claude Code、Codex 等）用的技能：按平面图在本机 Blender 搭建**尺寸准确的灰模场景**，摆放**彩色人偶**（头身分开、无四肢，看得出朝向）、编排走位和运镜，导出 **21:9、24 帧/秒**的灰模预演视频，作为 Seedance 2.5 的白模参考，用来锁定人物调度、空间位置、构图和运镜。
